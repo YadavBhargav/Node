@@ -1,48 +1,15 @@
-const mongoose = require('mongoose');
-mongoose.connect("mongodb://127.0.0.1:27017/e-comm");
-const ProductSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    brand: String,
-    category: String,
-});
+const express = require("express");
+require("./config");
 
-const saveInDB = async () => {
-    const ProductModel = mongoose.model('products', ProductSchema);
-    let data = new ProductModel({
-        name: "Narzo 55",
-        price: 15000,
-        brand: "Realme",
-        category: "Mobile"
-    });
-    let result = await data.save()
-    console.log(result)
-}
+const Product = require("./product");
 
-const updateInDB = async () => {
-    const ProductModel = mongoose.model('products', ProductSchema);
-    let data = await ProductModel.updateOne(
-        { name: "Narzo 55" },
-        {
-            $set: { price: "15000", name: "Narzo 10" }
-        }
-    )
-    console.log(data);
-}
+const app = express();
+app.use(express.json());
+app.post("/create", async (req, res) => {
+    let data = new Product(req.body)
+    let result = await data.save();
+    console.log(result);
+    res.send(result)
+})
 
-const deleteInDB = async () => {
-    const ProductModel = mongoose.model('products', ProductSchema);
-    let data = await ProductModel.deleteOne({ name: "Narzo 10" });
-    console.log(data);
-}
-
-
-const findInDB = async () => {
-    const ProductModel = mongoose.model('products', ProductSchema);
-    let data = await ProductModel.find();
-    console.log(data);
-}
-
-findInDB()
-
-
+app.listen(5000)
