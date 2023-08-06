@@ -12,13 +12,23 @@ app.post("/create", async (req, res) => {
 })
 
 app.get("/list", async (req, res) => {
-    let data = await Product.find();  
+    let data = await Product.find();
     res.send(data)
 })
 
-app.delete("/delete/:id", async (req,res)=>{
+app.delete("/delete/:_id", async (req, res) => {
     console.log(req.params)
-    res.send("done")
+    let data = await Product.deleteOne(req.params)
+    res.send(data)
+})
+
+app.put("/update/:_id", async (req, res) => {
+    console.log(req.params)
+    let data = await Product.updateOne(
+        req.params,
+        { $set: req.body }
+    );
+    res.send(data)
 })
 
 app.listen(5000)
