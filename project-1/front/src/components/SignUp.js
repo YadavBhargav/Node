@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 import { Formik, Form as FormikForm } from 'formik'
+import * as Yup from "yup";
 import Input from './common/formComponent/input'
+import RegisterServices from '../services/registerServices'
+import { useNavigate } from 'react-router-dom'
 const SignUp = () => {
+
+    const navigate = useNavigate();
+
     const initialValues = {
         name: "",
         email: "",
@@ -9,8 +15,24 @@ const SignUp = () => {
     }
 
     const onSubmit = (fields, { resetFrom }) => {
-        console.log(fields)
+        RegisterServices.signUp({
+            name: fields.name,
+            email: fields.email,
+            password: fields.password
+        }).then((response) => {
+            if (response?.data) {
+                navigate("/");
+            }
+        }).catch((error) => {
+            // console.log(error)
+        })
     }
+
+    const validationSchema = Yup.object().shape({
+        name: Yup.string().required("Name is required"),
+        email: Yup.string().required("Email is required"),
+        password: Yup.string().required("Password is required")
+    })
 
     return (
         <div className='register'>
@@ -18,9 +40,11 @@ const SignUp = () => {
             <Formik
                 enableReinitialize={true}
                 initialValues={initialValues}
+                validationSchema={validationSchema}
                 onSubmit={onSubmit}
             >
-                {({ }) => {
+                {({ errors }) => {
+                    console.log(errors, "errors")
                     return (
                         <FormikForm>
                             <Input className={"inputBox"} name={"name"} placeholder='Enter Name' />
