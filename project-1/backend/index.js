@@ -4,8 +4,8 @@ require('./db/config')
 const User = require('./db/users')
 const app = express();
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 app.post("/register", async (req, res) => {
     let user = new User(req.body);
