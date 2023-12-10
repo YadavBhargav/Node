@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Formik, Form as FormikForm } from 'formik'
 import * as Yup from "yup";
 import Input from './common/formComponent/input'
 import RegisterServices from '../services/registerServices'
 import { useNavigate } from 'react-router-dom'
-const SignUp = () => {
 
+const SignUp = () => {
     const navigate = useNavigate();
 
     const initialValues = {
@@ -21,6 +21,7 @@ const SignUp = () => {
             password: fields.password
         }).then((response) => {
             if (response?.data) {
+                localStorage.setItem("user", JSON.stringify(response.data));
                 navigate("/");
             }
         }).catch((error) => {
@@ -34,6 +35,13 @@ const SignUp = () => {
         password: Yup.string().required("Password is required")
     })
 
+    useEffect(() => {
+        const auth = localStorage.getItem("user");
+        if (auth) {
+            navigate("/");
+        }
+    }, []);
+
     return (
         <div className='register'>
             <h1>Register Page</h1>
@@ -44,7 +52,7 @@ const SignUp = () => {
                 onSubmit={onSubmit}
             >
                 {({ errors }) => {
-                    console.log(errors, "errors")
+
                     return (
                         <FormikForm>
                             <Input className={"inputBox"} name={"name"} placeholder='Enter Name' />
