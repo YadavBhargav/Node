@@ -40,24 +40,12 @@ const options = {
     autoQuery: false,
 
     // Paths to files containing OpenAPI definitions
-    apis: ['./index/*.js'],
+    apis: ["./routes/*.js"],
     // servers: [{api:"http://localhost:5000/"}]
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-/**
- * @swagger
- * /register:
- *  post:
- *     summary: Retrieve a list of JSONPlaceholder users
- *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
- *     response:
- *          200:
- *              description: App is up and run
-*/
-
 
 app.post("/register", async (req, res) => {
     let user = new User(req.body);
