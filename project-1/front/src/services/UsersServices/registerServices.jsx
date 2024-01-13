@@ -1,4 +1,4 @@
-import { API } from "../api/api";
+import { API } from "../../api/api";
 
 class RegisterService {
   signUp(userData) {

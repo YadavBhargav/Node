@@ -1,15 +1,31 @@
 import React from "react";
 import { Formik, Form as FormikForm } from "formik";
 import Input from "./common/formComponent/input";
+import loginServices from "../services/UsersServices/loginServices";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const initialValues = {
     email: "",
     password: "",
   };
   const onSubmit = (fields, { resetForm }) => {
-    console.log(fields, "fields");
+    loginServices
+      .login({
+        ...fields,
+      })
+      .then((response) => {
+        if (response.data.name) {
+          localStorage.setItem("user", JSON.stringify(response.data));
+          navigate("/")
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
   return (
     <>
       <div className="login">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form as FormikForm } from "formik";
 import * as Yup from "yup";
 import Input from "./common/formComponent/input";
-import RegisterServices from "../services/registerServices";
+import RegisterServices from "../services/UsersServices/registerServices";
 import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
