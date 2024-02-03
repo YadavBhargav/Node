@@ -18,7 +18,7 @@ const Login = () => {
       .then((response) => {
         if (response.data.name) {
           localStorage.setItem("user", JSON.stringify(response.data));
-          navigate("/")
+          navigate("/");
         }
       })
       .catch((error) => {
@@ -43,6 +43,7 @@ const Login = () => {
                   placeholder={"Enter Email"}
                 />
                 <Input
+                  type="password"
                   className={"inputBox"}
                   name={"password"}
                   placeholder={"Enter Password"}
