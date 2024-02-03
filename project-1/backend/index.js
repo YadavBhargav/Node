@@ -1,9 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 require('./db/config')
-const User = require('./db/users')
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+
+const User = require('./db/users')
+const Product = require('./db/product')
 
 const app = express();
 
