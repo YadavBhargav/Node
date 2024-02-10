@@ -33,8 +33,9 @@ const Login = () => {
           initialValues={initialValues}
           onSubmit={onSubmit}
           enableReinitialize={true}
+          validateOnMount={true}
         >
-          {({}) => {
+          {({ values }) => {
             return (
               <FormikForm>
                 <Input
