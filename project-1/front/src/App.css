@@ -31,7 +31,8 @@
   border: 1px solid skyblue;
 }
 
-.register {
+.register,
+.product {
   margin-left: 30%;
 }
 

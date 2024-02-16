@@ -1,17 +1,31 @@
 import React from "react";
 import { Formik, Form as FormikForm } from "formik";
 import Input from "../common/formComponent/input";
+import productServices from "../../services/ProductServices/productServices";
 
 const addProduct = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const initialValues = {
     name: "",
     price: "",
     category: "",
-    userId: "",
-    companyId: "",
+    userId: user?._id,
+    companyId: "1",
   };
 
-  const onSubmit = () => {};
+  const onSubmit = (fields) => {
+    productServices
+      .createProduct({ ...fields })
+      .then((response) => {
+        if (response) {
+          console.log(response, "response");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <>
       <Formik
@@ -19,16 +33,32 @@ const addProduct = () => {
         onSubmit={onSubmit}
         enableReinitialize={true}
       >
-        {({ values }) => {
+        {({}) => {
           return (
-            <FormikForm>
-              <Input placeholder="Enter Product Name" name={"name"} />
-              <Input placeholder="Enter Product Price" name={"price"} />
-              <Input placeholder="Enter Product Category" name={"category"} />
-              {/* <Input name={"companyId"} /> */}
+            <div className="product">
+              <FormikForm>
+                <Input
+                  className={"inputBox"}
+                  placeholder="Enter Product Name"
+                  name={"name"}
+                />
+                <Input
+                  className={"inputBox"}
+                  placeholder="Enter Product Price"
+                  name={"price"}
+                />
+                <Input
+                  className={"inputBox"}
+                  placeholder="Enter Product Category"
+                  name={"category"}
+                />
+                {/* <Input name={"companyId"} /> */}
 
-              <button type="submit">Save</button>
-            </FormikForm>
+                <button className="appButton" type="submit">
+                  Save
+                </button>
+              </FormikForm>
+            </div>
           );
         }}
       </Formik>
