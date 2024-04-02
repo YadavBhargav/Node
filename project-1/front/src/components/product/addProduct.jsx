@@ -26,7 +26,6 @@ const addProduct = () => {
       .createProduct({ ...fields })
       .then((response) => {
         if (response) {
-          console.log(response, "response");
           resetForm();
         }
       })
@@ -53,12 +52,12 @@ const addProduct = () => {
                     name={"name"}
                   />
                   <Input
-                    className={"w-56 m-2"}  
+                    className={"w-56 m-2"}
                     placeholder="Enter Product Price"
                     name={"price"}
                   />
                   <Input
-                    className={"w-56 m-2"}  
+                    className={"w-56 m-2"}
                     placeholder="Enter Product Category"
                     name={"category"}
                   />
