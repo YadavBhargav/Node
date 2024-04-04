@@ -32,25 +32,31 @@ const ProductList = () => {
               <th scope="col" className="px-6 py-3">
                 category
               </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {data.map((items, index) => {
-              console.log(items, "items");
               return (
                 <>
                   <tr
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                     key={index}
                   >
-                    <th
+                    <td
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {items?.name}
-                    </th>
+                    </td>
                     <td className="px-6 py-4">{items?.price}</td>
                     <td className="px-6 py-4">{items?.category}</td>
+                    <td className="px-6 py-4">
+                      <span class="material-symbols-outlined">edit</span>
+                      <span class="material-symbols-outlined">delete</span>
+                    </td>
                   </tr>
                 </>
               );
