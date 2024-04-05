@@ -8,6 +8,10 @@ class ProductService {
   getProduct() {
     return API.get(`/productsList`);
   }
+
+  deleteById(id){
+    return API.post(`/deleteProduct/${id}`)
+  }
 }
 
 export default new ProductService();

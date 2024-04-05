@@ -13,6 +13,19 @@ const ProductList = () => {
       .catch((error) => {});
   };
 
+  const deletById = (value) => {
+    console.log(value._id, "value");
+    if (value._id) {
+      productServices
+        .deleteById(value._id)
+        .then((response) => {
+          console.log(response);
+          getProduct();
+        })
+        .catch((error) => {});
+    }
+  };
+
   useEffect(() => {
     getProduct();
   }, []);
@@ -54,8 +67,12 @@ const ProductList = () => {
                     <td className="px-6 py-4">{items?.price}</td>
                     <td className="px-6 py-4">{items?.category}</td>
                     <td className="px-6 py-4">
-                      <span class="material-symbols-outlined">edit</span>
-                      <span class="material-symbols-outlined">delete</span>
+                      <span className="material-symbols-outlined">edit</span>
+                      <button onClick={() => deletById(items)}>
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
+                      </button>
                     </td>
                   </tr>
                 </>
