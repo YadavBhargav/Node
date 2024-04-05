@@ -86,7 +86,7 @@ app.get("/productsList", async (req, res) => {
     }
 })
 
-app.delete("/deleteProduct/:id", async (req, res) => {
+app.post("/deleteProduct/:id", async (req, res) => {
     const result = await Product.deleteOne({ _id: req.params.id })
     res.send(result)
 })
