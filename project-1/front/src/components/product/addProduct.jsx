@@ -35,43 +35,46 @@ const addProduct = () => {
   };
   return (
     <>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={onSubmit}
-        enableReinitialize={true}
-        validationSchema={validationSchema}
-      >
-        {({}) => {
-          return (
-            <div className="product">
-              <FormikForm>
-                <div className="py-2">
-                  <Input
-                    className={"w-56 m-2"}
-                    placeholder="Enter Product Name"
-                    name={"name"}
-                  />
-                  <Input
-                    className={"w-56 m-2"}
-                    placeholder="Enter Product Price"
-                    name={"price"}
-                  />
-                  <Input
-                    className={"w-56 m-2"}
-                    placeholder="Enter Product Category"
-                    name={"category"}
-                  />
-                </div>
-                {/* <Input name={"companyId"} /> */}
+      <div className="p-5 grid grid-cols-3 gap-4">
+        <div></div>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={onSubmit}
+          enableReinitialize={true}
+          validationSchema={validationSchema}
+        >
+          {({}) => {
+            return (
+              <div className="">
+                <FormikForm>
+                  <div className="py-2">
+                    <Input
+                      className={"w-56 m-2"}
+                      placeholder="Enter Product Name"
+                      name={"name"}
+                    />
+                    <Input
+                      className={"w-56 m-2"}
+                      placeholder="Enter Product Price"
+                      name={"price"}
+                    />
+                    <Input
+                      className={"w-56 m-2"}
+                      placeholder="Enter Product Category"
+                      name={"category"}
+                    />
+                  </div>
+                  {/* <Input name={"companyId"} /> */}
 
-                <button className="appButton" type="submit">
-                  Save
-                </button>
-              </FormikForm>
-            </div>
-          );
-        }}
-      </Formik>
+                  <button className="appButton" type="submit">
+                    Save
+                  </button>
+                </FormikForm>
+              </div>
+            );
+          }}
+        </Formik>
+      </div>
     </>
   );
 };
