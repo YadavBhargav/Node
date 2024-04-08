@@ -91,5 +91,14 @@ app.post("/deleteProduct/:id", async (req, res) => {
     res.send(result)
 })
 
+app.get("/getProduct/:id", async (req, res) => {
+    const result = await Product.findOne({ _id: req.params.id })
+    if (result) {
+        res.send(result)
+    } else {
+        res.send({ result: "Product not found" })
+    }
+})
+
 
 app.listen(5000);
