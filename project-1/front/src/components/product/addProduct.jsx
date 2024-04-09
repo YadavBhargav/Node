@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Formik, Form as FormikForm } from "formik";
 import Input from "../common/formComponent/input";
 import * as Yup from "yup";
 import productServices from "../../services/ProductServices/productServices";
 
-const addProduct = ({ handleShowModal, setProductModel, getProduct }) => {
+const AddProduct = ({
+  handleShowModal,
+  setProductModel,
+  getProduct,
+  id,
+  setEditId,
+}) => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const [data, setData] = useState({});
 
   const initialValues = {
-    name: "",
-    price: "",
-    category: "",
-    userId: user?._id,
-    companyId: "1",
+    id: data?._id || "",
+    name: data?.name || "",
+    price: data?.price || "",
+    category: data?.category || "",
+    userId: data?.userId || user?._id,
+    companyId: data?.companyId || "1",
   };
 
   const validationSchema = Yup.object().shape({
@@ -20,6 +28,19 @@ const addProduct = ({ handleShowModal, setProductModel, getProduct }) => {
     price: Yup.string().required("Price is required"),
     category: Yup.string().required("Ccategory is required"),
   });
+
+  const getProductByIdData = () => {
+    if (id) {
+      productServices
+        .getProductById(id)
+        .then((response) => {
+          if (response?.data) {
+            setData(response?.data);
+          }
+        })
+        .catch((error) => {});
+    }
+  };
 
   const onSubmit = (fields, { resetForm }) => {
     productServices
@@ -36,6 +57,13 @@ const addProduct = ({ handleShowModal, setProductModel, getProduct }) => {
         setProductModel(false);
       });
   };
+
+  useEffect(() => {
+    console.log("first", id);
+    if (id) {
+      getProductByIdData();
+    }
+  }, [id]);
   return (
     <>
       <div className="overflow-y-auto overflow-x-hidden fixed z-30 right-0 left-0 top-4 justify-center items-center h-modal md:h-full md:inset-0">
@@ -49,7 +77,10 @@ const addProduct = ({ handleShowModal, setProductModel, getProduct }) => {
                 <button
                   type="button"
                   className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center "
-                  onClick={handleShowModal}
+                  onClick={() => {
+                    handleShowModal();
+                    setEditId(null);
+                  }}
                 >
                   <span className="material-icons-outlined">close</span>
                 </button>
@@ -101,7 +132,10 @@ const addProduct = ({ handleShowModal, setProductModel, getProduct }) => {
                           <button
                             type="button"
                             className="btn bg-white border-neutral-200 text-gray-500 hover:text-gray-700"
-                            onClick={handleShowModal}
+                            onClick={() => {
+                              handleShowModal();
+                              setEditId(null);
+                            }}
                           >
                             Cancel
                           </button>
@@ -126,4 +160,4 @@ const addProduct = ({ handleShowModal, setProductModel, getProduct }) => {
   );
 };
 
-export default addProduct;
+export default AddProduct;

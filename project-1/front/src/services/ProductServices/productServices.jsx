@@ -9,8 +9,12 @@ class ProductService {
     return API.get(`/productsList`);
   }
 
-  deleteById(id){
-    return API.post(`/deleteProduct/${id}`)
+  getProductById(id) {
+    return API.get(`getProduct/${id}`);
+  }
+
+  deleteById(id) {
+    return API.post(`/deleteProduct/${id}`);
   }
 }
 

@@ -5,6 +5,7 @@ import AddProduct from "./addProduct";
 const ProductList = () => {
   const [data, setData] = useState([]);
   const [productModel, setProductModel] = useState(false);
+  const [editId, setEditId] = useState(null);
 
   const getProduct = () => {
     productServices
@@ -68,18 +69,20 @@ const ProductList = () => {
               return (
                 <Fragment key={index}>
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
+                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {items?.name}
                     </td>
                     <td className="px-6 py-4">{items?.price}</td>
                     <td className="px-6 py-4">{items?.category}</td>
                     <td className="px-6 py-4">
-                      {/* <Link to={`/update/${items._id}`}> */}
+                      <button
+                        onClick={() => {
+                          setProductModel(true);
+                          setEditId(items?._id);
+                        }}
+                      >
                         <span className="material-symbols-outlined">edit</span>
-                      {/* </Link> */}
+                      </button>
                       <button onClick={() => deletById(items)}>
                         <span className="material-symbols-outlined">
                           delete
@@ -99,6 +102,8 @@ const ProductList = () => {
           setProductModel={setProductModel}
           handleShowModal={handleShowModal}
           getProduct={getProduct}
+          id={editId}
+          setEditId={setEditId}
         />
       )}
     </>
