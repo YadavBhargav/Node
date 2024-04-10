@@ -103,7 +103,7 @@ const ProductList = () => {
           handleShowModal={handleShowModal}
           getProduct={getProduct}
           id={editId}
-          setEditId={setEditId}
+        setEditId={setEditId}
         />
       )}
     </>

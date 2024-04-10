@@ -15,7 +15,7 @@ const AddProduct = ({
   const [data, setData] = useState({});
 
   const initialValues = {
-    id: data?._id || "",
+    _id: data?._id || 0,
     name: data?.name || "",
     price: data?.price || "",
     category: data?.category || "",
@@ -59,7 +59,6 @@ const AddProduct = ({
   };
 
   useEffect(() => {
-    console.log("first", id);
     if (id) {
       getProductByIdData();
     }
