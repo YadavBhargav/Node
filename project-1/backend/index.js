@@ -77,6 +77,11 @@ app.post("/addProduct", async (req, res) => {
     res.send(result)
 })
 
+app.post("/updateProduct", async (req, res) => {
+    let result = await Product.updateOne({ _id: req.body._id }, { $set: req.body })
+    res.send(result)
+})
+
 app.get("/productsList", async (req, res) => {
     let products = await Product.find();
     if (products.length > 0) {
