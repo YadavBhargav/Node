@@ -15,7 +15,7 @@ const AddProduct = ({
   const [data, setData] = useState({});
 
   const initialValues = {
-    _id: data?._id || 0,
+    _id: data?._id || "",
     name: data?.name || "",
     price: data?.price || "",
     category: data?.category || "",
@@ -43,8 +43,33 @@ const AddProduct = ({
   };
 
   const onSubmit = (fields, { resetForm }) => {
+    if (!id) {
+      delete fields["_id"];
+      create(fields, { resetForm });
+    } else {
+      update(fields, { resetForm });
+    }
+  };
+
+  const create = (fields, { resetForm }) => {
     productServices
       .createProduct({ ...fields })
+      .then((response) => {
+        if (response) {
+          resetForm();
+          getProduct();
+        }
+        setProductModel(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setProductModel(false);
+      });
+  };
+
+  const update = (fields, { resetForm }) => {
+    productServices
+      .updateProduct({ ...fields })
       .then((response) => {
         if (response) {
           resetForm();

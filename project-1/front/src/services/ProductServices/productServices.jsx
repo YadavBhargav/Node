@@ -5,6 +5,10 @@ class ProductService {
     return API.post(`/addProduct`, product);
   }
 
+  updateProduct(product) {
+    return API.post(`/updateProduct`, product);
+  }
+
   getProduct() {
     return API.get(`/productsList`);
   }
