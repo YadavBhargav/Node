@@ -13,6 +13,10 @@ class ProductService {
     return API.get(`/productsList`);
   }
 
+  searchProduct(value) {
+    return API.get(`/serach/${value}`);
+  }
+
   getProductById(id) {
     return API.get(`getProduct/${id}`);
   }
