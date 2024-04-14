@@ -4,6 +4,9 @@ require('./db/config')
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
+const jwt = require('jsonwebtoken');
+const jwtkey = "e-comm"
+
 const User = require('./db/users')
 const Product = require('./db/product')
 
@@ -61,7 +64,15 @@ app.post("/login", async (req, res) => {
     if (req.body.password && req.body.email) {
         let user = await User.findOne(req.body).select("-password");
         if (user) {
-            res.send(user);
+            jwt.sign({ user }, jwtkey, { expiresIn: "2h" }, (err, token) => {
+                if (err) {
+                    res.send({ result: "no user found" })
+                }
+                else {
+                    res.send({ user, auth: token })
+                }
+
+            })
         } else {
             res.send({ result: "no user found" })
         }
