@@ -57,7 +57,15 @@ app.post("/register", async (req, res) => {
     let result = await user.save();
     result = result.toObject();
     delete result.password;
-    res.send(result);
+    // res.send(result);
+    jwt.sign({ result }, jwtkey, { expiresIn: "2h" }, (err, token) => {
+        if (err) {
+            res.send({ result: "no user found" })
+        }
+        else {
+            res.send({ result, auth: token })
+        }
+    })
 })
 
 app.post("/login", async (req, res) => {
