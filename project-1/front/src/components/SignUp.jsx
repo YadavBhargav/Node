@@ -22,7 +22,9 @@ const SignUp = () => {
     })
       .then((response) => {
         if (response?.data) {
-          localStorage.setItem("user", JSON.stringify(response.data));
+          localStorage.setItem("user", JSON.stringify(response.data.result));
+          localStorage.setItem("token", JSON.stringify(response.data.auth));
+
           navigate("/");
         }
       })

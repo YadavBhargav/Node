@@ -10,15 +10,16 @@ const Login = () => {
     email: "",
     password: "",
   };
-  
+
   const onSubmit = (fields, { resetForm }) => {
     loginServices
       .login({
         ...fields,
       })
       .then((response) => {
-        if (response.data.name) {
-          localStorage.setItem("user", JSON.stringify(response.data));
+        if (response.data.auth) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          localStorage.setItem("token", JSON.stringify(response.data.auth));
           navigate("/");
         }
       })
@@ -29,7 +30,9 @@ const Login = () => {
 
   return (
     <>
+      <title>Login</title>
       <div className="login">
+        <h1 className="font-semibold p-2 text-2xl">Login</h1>
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
@@ -39,17 +42,19 @@ const Login = () => {
           {({ values }) => {
             return (
               <FormikForm>
-                <Input
-                  className={"inputBox"}
-                  name={"email"}
-                  placeholder={"Enter Email"}
-                />
-                <Input
-                  type="password"
-                  className={"inputBox"}
-                  name={"password"}
-                  placeholder={"Enter Password"}
-                />
+                <div className="gap-2">
+                  <Input
+                    className={"inputBox mb-2"}
+                    name={"email"}
+                    placeholder={"Enter Email"}
+                  />
+                  <Input
+                    type="password"
+                    className={"inputBox"}
+                    name={"password"}
+                    placeholder={"Enter Password"}
+                  />
+                </div>
                 <button className="appButton" type="submit">
                   Login
                 </button>
