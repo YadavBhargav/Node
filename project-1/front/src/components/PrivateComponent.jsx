@@ -3,8 +3,9 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateComponent = () => {
   const auth = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
 
-  return auth ? <Outlet /> : <Navigate to="/signup" />;
+  return token && auth ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default PrivateComponent;

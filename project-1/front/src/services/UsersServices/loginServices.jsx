@@ -1,8 +1,8 @@
-import { API } from "../../api/api";
+import { PublicAPI } from "../../api/api";
 
 class LoginService {
   login(loginObj) {
-    return API.post("/login", loginObj);
+    return PublicAPI.post("/login", loginObj);
   }
 }
 

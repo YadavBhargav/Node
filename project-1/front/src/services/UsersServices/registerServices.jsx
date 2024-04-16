@@ -1,8 +1,8 @@
-import { API } from "../../api/api";
+import { PublicAPI } from "../../api/api";
 
 class RegisterService {
   signUp(userData) {
-    return API.post("/register",userData);
+    return PublicAPI.post("/register", userData);
   }
 }
 

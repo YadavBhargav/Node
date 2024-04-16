@@ -3,23 +3,26 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const auth = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const logout = () => {
     localStorage.clear();
-    navigate("/signup");
+    navigate("/login");
   };
 
   useEffect(() => {
-    const auth = localStorage.getItem("user");
-    if (auth) {
+    if (auth && token) {
       navigate("/");
+    } else {
+      navigate("/login");
+      localStorage.clear();
     }
-  }, []);
+  }, [auth, token]);
 
   return (
     <>
       <div>
-        {auth ? (
+        {auth && token ? (
           <ul className="nav-ul">
             <li>
               <Link to={"/"}>Products</Link>
