@@ -124,13 +124,31 @@ app.get("/getProduct/:id", async (req, res) => {
     }
 })
 
-app.get('/serach/:key', async (req, res) => {
+app.get('/serach/:key', verifyToken, async (req, res) => {
     let result = await Product.find({
         "$or": [{ name: { $regex: req.params.key } }, { category: { $regex: req.params.key } }]
     });
 
     res.send(result);
 })
+
+function verifyToken(req, res, next) {
+    let token = req.headers['authorization']
+    if (token) {
+        token = token.split(' ')[1]
+        jwt.verify(token, jwtkey, (error, valid) => {
+            if (error) {
+                res.send({ result: "You are not authorized" })
+            } else {
+                next();
+            }
+        })
+    } else {
+        res.send({ result: "You are not authorized" })
+    }
+    console.warn("middleware called", token)
+    next()
+}
 
 
 app.listen(5000);
