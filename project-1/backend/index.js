@@ -45,7 +45,7 @@ const options = {
     autoQuery: false,
 
     // Paths to files containing OpenAPI definitions
-    apis: ["./routes/*.js"],
+    apis: ["index.js", "./routes/*.js"],
     // servers: [{api:"http://localhost:5000/"}]
 };
 
