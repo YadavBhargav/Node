@@ -36,6 +36,20 @@ const swaggerDefinition = {
             description: 'Development server',
         },
     ],
+    components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: 'apiKey',
+                name: 'Authorization',
+                in: 'header',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+            },
+        }
+    },
+    security: [{
+        bearerAuth: []
+    }]
 }
 
 const options = {
@@ -52,7 +66,7 @@ const options = {
 const swaggerSpec = swaggerJSDoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.post("/register", async (req, res) => {
+app.post("/register", verifyToken, async (req, res) => {
     let user = new User(req.body);
     let result = await user.save();
     result = result.toObject();
@@ -68,7 +82,7 @@ app.post("/register", async (req, res) => {
     })
 })
 
-app.post("/login", async (req, res) => {
+app.post("/login", verifyToken, async (req, res) => {
     if (req.body.password && req.body.email) {
         let user = await User.findOne(req.body).select("-password");
         if (user) {
@@ -90,18 +104,18 @@ app.post("/login", async (req, res) => {
 
 })
 
-app.post("/addProduct", async (req, res) => {
+app.post("/addProduct", verifyToken, async (req, res) => {
     let product = new Product(req.body);
     let result = await product.save();
     res.send(result)
 })
 
-app.post("/updateProduct", async (req, res) => {
+app.post("/updateProduct", verifyToken, async (req, res) => {
     let result = await Product.updateOne({ _id: req.body._id }, { $set: req.body })
     res.send(result)
 })
 
-app.get("/productsList", async (req, res) => {
+app.get("/productsList", verifyToken, async (req, res) => {
     let products = await Product.find();
     if (products.length > 0) {
         res.send(products);
@@ -110,12 +124,12 @@ app.get("/productsList", async (req, res) => {
     }
 })
 
-app.post("/deleteProduct/:id", async (req, res) => {
+app.post("/deleteProduct/:id", verifyToken, async (req, res) => {
     const result = await Product.deleteOne({ _id: req.params.id })
     res.send(result)
 })
 
-app.get("/getProduct/:id", async (req, res) => {
+app.get("/getProduct/:id", verifyToken, async (req, res) => {
     const result = await Product.findOne({ _id: req.params.id })
     if (result) {
         res.send(result)
@@ -126,7 +140,11 @@ app.get("/getProduct/:id", async (req, res) => {
 
 app.get('/serach/:key', verifyToken, async (req, res) => {
     let result = await Product.find({
-        "$or": [{ name: { $regex: req.params.key } }, { category: { $regex: req.params.key } }]
+        "$or": [
+            { name: { $regex: req.params.key } },
+            { category: { $regex: req.params.key } },
+            { price: { $regex: req.params.key } }
+        ]
     });
 
     res.send(result);
