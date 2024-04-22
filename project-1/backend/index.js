@@ -138,16 +138,14 @@ function verifyToken(req, res, next) {
         token = token.split(' ')[1]
         jwt.verify(token, jwtkey, (error, valid) => {
             if (error) {
-                res.send({ result: "You are not authorized" })
+                res.status(401).send({ result: "Provide Valid token" })
             } else {
                 next();
             }
         })
     } else {
-        res.send({ result: "You are not authorized" })
+        res.status(403).send({ result: "You are not authorized" })
     }
-    console.warn("middleware called", token)
-    next()
 }
 
 
