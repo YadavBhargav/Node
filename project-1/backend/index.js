@@ -82,7 +82,7 @@ app.post("/register", verifyToken, async (req, res) => {
     })
 })
 
-app.post("/login", verifyToken, async (req, res) => {
+app.post("/login", async (req, res) => {
     if (req.body.password && req.body.email) {
         let user = await User.findOne(req.body).select("-password");
         if (user) {
