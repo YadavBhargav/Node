@@ -1,5 +1,5 @@
 import product from "../db/product";
- 
+
 /**
  * @swagger
  * /addProduct:
@@ -40,10 +40,10 @@ import product from "../db/product";
  *       400:
  *         description: Invalid request
  */
- 
+
 //Create Student
 router.post("/addProduct", product);
- 
+
 /**
  * @swagger
  * /productsList:
@@ -59,3 +59,27 @@ router.post("/addProduct", product);
  *              description: Bad request
  */
 router.post("/productsList", product);
+
+/**
+ * @swagger
+ * /productsListByUserId:
+ *   get:
+ *      tags:
+ *          - Products
+ *      parameters:
+ *          - in: query
+ *            name: userId
+ *            required: true
+ *            schema:
+ *              type: string
+ *            description: The ID of the user to fetch products for
+ *      responses:
+ *          '200':
+ *              description: Products fetched successfully
+ *          '400':
+ *              description: Bad request (e.g., missing userId)
+ *          '500':
+ *              description: Internal server error
+ */
+
+router.get("/productsListByUserId", product);

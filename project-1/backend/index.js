@@ -1,14 +1,14 @@
-const express = require('express');
-const cors = require('cors');
-require('./db/config')
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const express = require("express");
+const cors = require("cors");
+require("./db/config");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
-const jwt = require('jsonwebtoken');
-const jwtkey = "e-comm"
+const jwt = require("jsonwebtoken");
+const jwtkey = "e-comm";
 
-const User = require('./db/users')
-const Product = require('./db/product')
+const User = require("./db/users");
+const Product = require("./db/product");
 
 const app = express();
 
@@ -20,37 +20,40 @@ const swaggerDefinition = {
     info: {
         title: "Node JS API project for mongoDB",
         version: "1.0.0",
-        description: "This is a REST API application made with Express. It retrieves data from JSONPlaceholder.",
+        description:
+            "This is a REST API application made with Express. It retrieves data from JSONPlaceholder.",
         license: {
-            name: 'Licensed Under MIT',
-            url: 'https://spdx.org/licenses/MIT.html',
+            name: "Licensed Under MIT",
+            url: "https://spdx.org/licenses/MIT.html",
         },
         contact: {
-            name: 'JSONPlaceholder',
-            url: 'https://jsonplaceholder.typicode.com',
+            name: "JSONPlaceholder",
+            url: "https://jsonplaceholder.typicode.com",
         },
     },
     servers: [
         {
-            url: 'http://localhost:5000',
-            description: 'Development server',
+            url: "http://localhost:5000",
+            description: "Development server",
         },
     ],
     components: {
         securitySchemes: {
             bearerAuth: {
-                type: 'apiKey',
-                name: 'Authorization',
-                in: 'header',
-                scheme: 'bearer',
-                bearerFormat: 'JWT',
+                type: "apiKey",
+                name: "Authorization",
+                in: "header",
+                scheme: "bearer",
+                bearerFormat: "JWT",
             },
-        }
+        },
     },
-    security: [{
-        bearerAuth: []
-    }]
-}
+    security: [
+        {
+            bearerAuth: [],
+        },
+    ],
+};
 
 const options = {
     swaggerDefinition,
@@ -64,9 +67,9 @@ const options = {
 };
 
 const swaggerSpec = swaggerJSDoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.post("/register", verifyToken, async (req, res) => {
+app.post("/register", async (req, res) => {
     let user = new User(req.body);
     let result = await user.save();
     result = result.toObject();
@@ -74,13 +77,12 @@ app.post("/register", verifyToken, async (req, res) => {
     // res.send(result);
     jwt.sign({ result }, jwtkey, { expiresIn: "2h" }, (err, token) => {
         if (err) {
-            res.send({ result: "no user found" })
+            res.send({ result: "no user found" });
+        } else {
+            res.send({ result, auth: token });
         }
-        else {
-            res.send({ result, auth: token })
-        }
-    })
-})
+    });
+});
 
 app.post("/login", async (req, res) => {
     if (req.body.password && req.body.email) {
@@ -88,32 +90,32 @@ app.post("/login", async (req, res) => {
         if (user) {
             jwt.sign({ user }, jwtkey, { expiresIn: "2h" }, (err, token) => {
                 if (err) {
-                    res.send({ result: "no user found" })
+                    res.send({ result: "no user found" });
+                } else {
+                    res.send({ user, auth: token });
                 }
-                else {
-                    res.send({ user, auth: token })
-                }
-
-            })
+            });
         } else {
-            res.send({ result: "no user found" })
+            res.send({ result: "no user found" });
         }
     } else {
-        res.send({ result: "doesn't match email or password" })
+        res.send({ result: "doesn't match email or password" });
     }
+});
 
-})
-
-app.post("/addProduct", verifyToken, async (req, res) => {
+app.post("/addProduct", async (req, res) => {
     let product = new Product(req.body);
     let result = await product.save();
-    res.send(result)
-})
+    res.send(result);
+});
 
 app.post("/updateProduct", verifyToken, async (req, res) => {
-    let result = await Product.updateOne({ _id: req.body._id }, { $set: req.body })
-    res.send(result)
-})
+    let result = await Product.updateOne(
+        { _id: req.body._id },
+        { $set: req.body }
+    );
+    res.send(result);
+});
 
 app.get("/productsList", verifyToken, async (req, res) => {
     let products = await Product.find();
@@ -122,49 +124,75 @@ app.get("/productsList", verifyToken, async (req, res) => {
     } else {
         res.send({ result: "No products found" });
     }
-})
+});
+
+app.get("/productsListByUserId", async (req, res) => {
+    //   console.log(req.query); // Log query parameters for debugging
+    const { userId } = req.query; // Extract userId from query
+
+    // Validate query parameter
+    if (!userId) {
+        return res.status(400).send({ error: "userId is required" });
+    }
+
+    try {
+        // Fetch products using userId
+        const result = await Product.find({ userId });
+
+        res.send(result); // Respond with the products
+    } catch (error) {
+        console.error(error); // Log errors for debugging
+        res.status(500).send({ error: "Internal Server Error" });
+    }
+});
+
+// app.get("/productListByUserId", async (req, res) => {
+//   console.log(req.query);
+//   const { userId } = req.query;
+//   const result = await Product.find({ userId });
+//   res.send(result);
+// });
 
 app.post("/deleteProduct/:id", verifyToken, async (req, res) => {
-    const result = await Product.deleteOne({ _id: req.params.id })
-    res.send(result)
-})
+    const result = await Product.deleteOne({ _id: req.params.id });
+    res.send(result);
+});
 
 app.get("/getProduct/:id", verifyToken, async (req, res) => {
-    const result = await Product.findOne({ _id: req.params.id })
+    const result = await Product.findOne({ _id: req.params.id });
     if (result) {
-        res.send(result)
+        res.send(result);
     } else {
-        res.send({ result: "Product not found" })
+        res.send({ result: "Product not found" });
     }
-})
+});
 
-app.get('/serach/:key', verifyToken, async (req, res) => {
+app.get("/serach/:key", verifyToken, async (req, res) => {
     let result = await Product.find({
-        "$or": [
+        $or: [
             { name: { $regex: req.params.key } },
             { category: { $regex: req.params.key } },
-            { price: { $regex: req.params.key } }
-        ]
+            { price: { $regex: req.params.key } },
+        ],
     });
 
     res.send(result);
-})
+});
 
 function verifyToken(req, res, next) {
-    let token = req.headers['authorization']
+    let token = req.headers["authorization"];
     if (token) {
-        token = token.split(' ')[1]
+        token = token.split(" ")[1];
         jwt.verify(token, jwtkey, (error, valid) => {
             if (error) {
-                res.status(401).send({ result: "Provide Valid token" })
+                res.status(401).send({ result: "Provide Valid token" });
             } else {
                 next();
             }
-        })
+        });
     } else {
-        res.status(403).send({ result: "You are not authorized" })
+        res.status(403).send({ result: "You are not authorized" });
     }
 }
-
 
 app.listen(5000);
