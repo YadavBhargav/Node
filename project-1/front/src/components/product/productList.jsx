@@ -113,7 +113,7 @@ const ProductList = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((items, index) => {
+            {data && data.length > 0 && data.map((items, index) => {
               return (
                 <Fragment key={index}>
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
